@@ -1,0 +1,8 @@
+#!/bin/bash
+if [ "X(`md5sum <%= TMPFILE %> |cut -d\" \" -f 1`)" != "X(`md5sum <%= REALFILE %> |cut -d\" \" -f 1`)" ]; then 
+   # FILES NOT IDENTICAL
+     # Backup real file first
+     cp <%= REALFILE %> <%= BKFILE %>
+     # copy new over existing
+     cp <%= TMPFILE %> <%= REALFILE %>
+fi

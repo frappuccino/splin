@@ -1,0 +1,38 @@
+#!/bin/sh -e
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+
+hostname <%= SERVERNAME %>
+echo "<%= SERVERNAME %>" > /etc/hostname
+aws_local_ipv4=$(wget -q -O- http://169.254.169.254/latest/meta-data/local-ipv4)
+aws_public_ipv4=$(wget -q -O- http://169.254.169.254/latest/meta-data/public-ipv4)
+
+if grep -q "pvt<%= SERVERNAME %>" /etc/hosts; then
+  # MATCH FOUND FOR <%= SERVERNAME %>
+  sed -i "s/^.*pvt<%= SERVERNAME %>.*$/$aws_local_ipv4 pvt<%= SERVERNAME %>/" /etc/hosts
+else
+  echo "$aws_local_ipv4 pvt<%= SERVERNAME %>" >> /etc/hosts
+fi
+
+if grep -q "<%= SERVERNAME %>.<%= SERVERDOMAIN %>" /etc/hosts; then
+  # MATCH FOUND FOR <%= SERVERNAME %>.<%= SERVERDOMAIN %>
+  sed -i "s/^.*<%= SERVERNAME %>.<%= SERVERDOMAIN %>.*$/$aws_public_ipv4 <%= SERVERNAME %>.<%= SERVERDOMAIN %> <%= SERVERNAME %>/" /etc/hosts
+else
+  echo "$aws_public_ipv4 <%= SERVERNAME %>.<%= SERVERDOMAIN %> <%= SERVERNAME %>" >> /etc/hosts
+fi
+
+# Ensure mail goes out with the public name
+echo "<%= SERVERNAME %>.<%= SERVERDOMAIN %>" > /etc/mailname
+chmod 644 /etc/mailname
+service postfix reload
+
+exit 0
