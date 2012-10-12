@@ -1,5 +1,6 @@
 package :set_hostname do
   runner "hostname #{$servername}.#{$serverdomain}"
+  runner 'mv /etc/hostname /etc/hostname.old'
   push_text "#{$servername}.#{$serverdomain}", '/etc/hostname'
   verify { file_contains '/etc/hostname', "#{$servername}.#{$serverdomain}" }
 end
