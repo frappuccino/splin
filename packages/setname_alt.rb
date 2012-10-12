@@ -10,6 +10,7 @@ package :set_etc_hostname do
 end
 
 package :set_mailname do
+  requires :postfix
   push_text "#{$servername}.#{$serverdomain}", '/etc/mailname' do
     post :install, 'chmod 644 /etc/mailname'
     post :install, 'service postfix reload'

@@ -2,9 +2,9 @@
 #
 ##  - Setting some global variables to simply things
 ## ADJUST THESE SETTINGS
-$servername = "instance1"
-$serverdomain = "example.com"
-$host_ip = "192.168.0.1"  # not valide for EC2 instance; they set automatically
+$servername = "instance1001"
+$serverdomain = "linode.com"
+$host_ip = "192.168.0.55"  # not valide for EC2 instance; they set automatically
 $ec2_host = "no"
 $ssl_cert  = "no"
 $mysql = "yes"
